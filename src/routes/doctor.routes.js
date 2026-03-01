@@ -18,6 +18,12 @@ router.get(
   controller.getDailySummary
 );
 
+router.get(
+  '/schedule/month',
+  auth,
+  allow('DOCTOR'),
+  controller.getMonthlySummary
+);
 
 router.patch(
   '/appointments/:id/approve',

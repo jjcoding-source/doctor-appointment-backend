@@ -148,3 +148,81 @@ exports.getDailySummary = async ({ doctorUserId, date }) => {
     pending
   };
 };
+
+
+exports.getMonthlySummary = async ({ doctorUserId, month }) => {
+
+  if (!month) {
+    throw new ApiError(400, 'month is required (YYYY-MM)');
+  }
+
+  
+  const [year, m] = month.split('-').map(Number);
+
+  if (!year || !m || m < 1 || m > 12) {
+    throw new ApiError(400, 'Invalid month format. Use YYYY-MM');
+  }
+
+  const doctor = await Doctor.findOne({ userId: doctorUserId });
+
+  if (!doctor) {
+    throw new ApiError(404, 'Doctor profile not found');
+  }
+
+  const monthStart = new Date(year, m - 1, 1, 0, 0, 0, 0);
+  const monthEnd = new Date(year, m, 0, 23, 59, 59, 999);
+
+ 
+  const slotsInMonth = doctor.slots.filter(s => {
+    const t = new Date(s.start);
+    return t >= monthStart && t <= monthEnd;
+  });
+
+  
+  const appointments = await Appointment.find({
+    doctorId: doctor._id,
+    startTime: { $gte: monthStart, $lte: monthEnd }
+  });
+
+  
+  const toKey = d =>
+    new Date(d).toISOString().slice(0, 10);
+
+  const slotMap = {};
+  const appointmentMap = {};
+
+ 
+  for (const s of slotsInMonth) {
+    const key = toKey(s.start);
+    slotMap[key] = (slotMap[key] || 0) + 1;
+  }
+
+ 
+  for (const a of appointments) {
+    const key = toKey(a.startTime);
+    appointmentMap[key] = (appointmentMap[key] || 0) + 1;
+  }
+
+
+  const allDays = new Set([
+    ...Object.keys(slotMap),
+    ...Object.keys(appointmentMap)
+  ]);
+
+  const result = [...allDays]
+    .sort()
+    .map(date => {
+
+      const totalSlots = slotMap[date] || 0;
+      const booked = appointmentMap[date] || 0;
+
+      return {
+        date,
+        totalSlots,
+        booked,
+        free: totalSlots - booked
+      };
+    });
+
+  return result;
+};

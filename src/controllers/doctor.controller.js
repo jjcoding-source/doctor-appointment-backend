@@ -46,3 +46,19 @@ exports.getDailySummary = asyncHandler(async (req, res) => {
     })
   );
 });
+
+
+exports.getMonthlySummary = asyncHandler(async (req, res) => {
+
+  const result = await doctorService.getMonthlySummary({
+    doctorUserId: req.user.id,
+    month: req.query.month
+  });
+
+  res.json(
+    new ApiResponse({
+      message: 'Monthly schedule summary',
+      data: result
+    })
+  );
+});
