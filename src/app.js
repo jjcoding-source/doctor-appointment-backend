@@ -7,6 +7,7 @@ const adminRoutes = require('./routes/admin.routes');
 const authRoutes = require('./routes/auth.routes');
 const errorMiddleware = require('./middlewares/error.middleware');
 const patientRoutes = require('./routes/patient.routes');
+const doctorRoutes = require('./routes/doctor.routes');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/api/appointments', appointmentRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/patient', patientRoutes);
+app.use('/api/doctor', doctorRoutes);
 
 app.use(errorMiddleware);
 
