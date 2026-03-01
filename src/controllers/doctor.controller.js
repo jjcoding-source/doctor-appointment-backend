@@ -1,5 +1,6 @@
 const asyncHandler = require('../utils/asyncHandler');
 const doctorService = require('../services/doctor.service');
+const ApiResponse = require('../utils/ApiResponse');
 
 exports.getMyAppointments = asyncHandler(async (req, res) => {
 
@@ -28,4 +29,20 @@ exports.cancelAppointment = asyncHandler(async (req, res) => {
   });
 
   res.json(result);
+});
+
+
+exports.getDailySummary = asyncHandler(async (req, res) => {
+
+  const result = await doctorService.getDailySummary({
+    doctorUserId: req.user.id,
+    date: req.query.date
+  });
+
+  res.json(
+    new ApiResponse({
+      message: 'Daily schedule summary',
+      data: result
+    })
+  );
 });

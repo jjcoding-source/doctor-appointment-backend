@@ -11,6 +11,14 @@ router.get(
   controller.getMyAppointments
 );
 
+router.get(
+  '/schedule/summary',
+  auth,
+  allow('DOCTOR'),
+  controller.getDailySummary
+);
+
+
 router.patch(
   '/appointments/:id/approve',
   auth,
