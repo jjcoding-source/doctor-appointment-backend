@@ -95,3 +95,18 @@ exports.createDoctorWithSlots = async payload => {
     slots
   });
 };
+
+
+exports.setDoctorStatus = async ({ doctorId, isActive }) => {
+
+  const doctor = await doctorRepo.findById(doctorId);
+
+  if (!doctor) {
+    throw new ApiError(404, 'Doctor not found');
+  }
+
+  doctor.isActive = isActive;
+  await doctor.save();
+
+  return doctor;
+};

@@ -11,4 +11,11 @@ router.post(
   controller.createDoctor
 );
 
+router.patch(
+  '/doctors/:id/status',
+  auth,
+  allow('ADMIN'),
+  controller.setDoctorStatus
+);
+
 module.exports = router;

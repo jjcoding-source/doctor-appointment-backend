@@ -6,3 +6,14 @@ exports.createDoctor = asyncHandler(async (req, res) => {
 
   res.status(201).json(doctor);
 });
+
+exports.setDoctorStatus = asyncHandler(async (req, res) => {
+
+  const result = await adminService.setDoctorStatus({
+    doctorId: req.params.id,
+    isActive: req.body.isActive
+  });
+
+  res.json(result);
+});
+
