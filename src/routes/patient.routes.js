@@ -11,4 +11,18 @@ router.get(
   controller.getDoctors
 );
 
+router.get(
+  '/appointments',
+  auth,
+  allow('PATIENT'),
+  controller.getMyAppointments
+);
+
+router.patch(
+  '/appointments/:id/cancel',
+  auth,
+  allow('PATIENT'),
+  controller.cancelMyAppointment
+);
+
 module.exports = router;

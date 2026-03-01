@@ -10,3 +10,22 @@ exports.getDoctors = asyncHandler(async (req, res) => {
 
   res.json(result);
 });
+
+
+exports.getMyAppointments = asyncHandler(async (req, res) => {
+
+  const result = await patientService.getMyAppointments(req.user.id);
+
+  res.json(result);
+});
+
+
+exports.cancelMyAppointment = asyncHandler(async (req, res) => {
+
+  const result = await patientService.cancelMyAppointment({
+    userId: req.user.id,
+    appointmentId: req.params.id
+  });
+
+  res.json(result);
+});

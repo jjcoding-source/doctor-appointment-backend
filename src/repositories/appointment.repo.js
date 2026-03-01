@@ -18,3 +18,8 @@ exports.updateStatus = (id, status) =>
     { status },
     { new: true }
   );
+
+  exports.findByPatientId = patientId =>
+  Appointment.find({ patientId })
+    .populate('doctorId')
+    .sort({ slotStart: 1 });
